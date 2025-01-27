@@ -1,3 +1,14 @@
+// ==UserScript==
+// @name         Teams Exporter
+// @namespace    http://tampermonkey.net/
+// @version      2025-01-27
+// @description  try to take over the world!
+// @author       https://github.com/danielrodriguez87, https://www.reddit.com/user/Sn34kyMofo/, https://github.com/ajn142
+// @match        https://teams.microsoft.com/v2/
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=microsoft.com
+// @grant        none
+// ==/UserScript==
+
 // Configuration
 const CONFIG = {
     delayTime: 1000,
@@ -156,12 +167,12 @@ function createControlPanel(exportWindow, chatName) {
     controlPanel.appendChild(stopButton);
     controlPanel.appendChild(downloadButton);
 
-    return { 
-        controlPanel, 
-        downloadButton, 
+    return {
+        controlPanel,
+        downloadButton,
         delayInput,
         titleInput,
-        fileNameInput 
+        fileNameInput
     };
 }
 
@@ -225,13 +236,13 @@ function updatePreview(exportWindow, markdown) {
 function createStyleSheet(exportWindow) {
     const style = exportWindow.document.createElement('style');
     style.textContent = `
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px; 
-            background: #f5f5f5; 
-            padding-top: 60px; 
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+            padding-top: 60px;
         }
-        .message { 
+        .message {
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 15px;
@@ -250,7 +261,7 @@ function createStyleSheet(exportWindow) {
         .content { margin-top: 5px; white-space: pre-wrap; }
         .images { margin-top: 10px; }
         .images img { max-width: 300px; margin: 5px; border: 1px solid #ddd; border-radius: 4px; }
-        .export-info { 
+        .export-info {
             margin-top: 20px;
             padding: 10px;
             background: #fff;
@@ -348,14 +359,14 @@ function createStyleSheet(exportWindow) {
             margin-left: 10px;
             font-size: 12px;
         }
-        .title-section, 
+        .title-section,
         .filename-section {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
         }
-        .title-input, 
+        .title-input,
         .filename-input {
             width: 300px;
             padding: 4px 8px;
@@ -419,7 +430,7 @@ async function exportTeamsChat() {
 
             CONFIG.delayTime = parseInt(delayInput.value) || 1000;
 
-            messagePane.scrollTop = 0;
+            //ssagePane.scrollTop = 0;
             await new Promise(resolve => setTimeout(resolve, CONFIG.delayTime));
 
             progressInfo.textContent = `Loading messages... Found ${messages.length} so far`;
@@ -439,8 +450,8 @@ async function exportTeamsChat() {
                 const images = Array.from(msg.querySelectorAll('img'))
                     .filter(img => {
                         const src = img.src || '';
-                        return !src.includes('emoticons') && 
-                               !src.includes('presence') && 
+                        return !src.includes('emoticons') &&
+                               !src.includes('presence') &&
                                !src.includes('profilepicture');
                     })
                     .map(img => ({
@@ -528,13 +539,44 @@ async function exportTeamsChat() {
     }
 }
 
+// Sample code taken from https://www.reddit.com/r/GreaseMonkey/comments/175mxtp/comment/k4redv8/ and https://pastebin.com/H8yBtQ8H to allow triggering by pressing both shift keys.
+(function() {
+    'use strict';
+
+    window.keys = [];
+    let keys = window.keys;
+
+    window.runMyScript = () => {
+        exportTeamsChat();
+    }
+
+    window.keysCheck = () => {
+        keys.push(event.code);
+        keys = [...new Set(keys)];
+        setTimeout(() => { keys = []; }, 100);
+    }
+
+    document.querySelector('body').addEventListener("keydown", (event) => {
+        const shiftKeyPressed = event.code === "ShiftLeft" || event.code === "ShiftRight";
+
+        if (shiftKeyPressed) {
+            window.keysCheck();
+        }
+
+        if (keys.length === 2) {
+            window.runMyScript();
+            keys = [];
+        }
+    });
+})();
+
 console.log(`
 Teams Chat Export Tool
 ---------------------
 1. Make sure you're on teams.microsoft.com
 2. Navigate to the chat you want to export
 3. Click on any message in the chat
-4. Type exportTeamsChat() to start the export
+4. Press both Shift keys simultaneously to trigger the export
 5. Use the controls to adjust scroll delay or stop the export
 6. Click "Download as Markdown" when ready
 `);
