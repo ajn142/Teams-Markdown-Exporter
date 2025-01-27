@@ -430,7 +430,7 @@ async function exportTeamsChat() {
 
             CONFIG.delayTime = parseInt(delayInput.value) || 1000;
 
-            //ssagePane.scrollTop = 0;
+            /* messagePane.scrollTop = 0; */ //removing this prevents messages from resetting to the beginning of time
             await new Promise(resolve => setTimeout(resolve, CONFIG.delayTime));
 
             progressInfo.textContent = `Loading messages... Found ${messages.length} so far`;
@@ -480,7 +480,7 @@ async function exportTeamsChat() {
             }
         }
 
-        messages.reverse().forEach(msg => {
+        messages/*.reverse()*/.forEach(msg => { //removing the reverse fixes ordering issues caused by not starting from the first message in the conversation.
             const messageDiv = exportWindow.document.createElement('div');
             messageDiv.className = `message ${msg.isMyMessage ? 'my-message' : 'other-message'}`;
 
