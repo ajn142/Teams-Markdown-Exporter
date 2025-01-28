@@ -1,12 +1,13 @@
 // ==UserScript==
-// @name         Teams Exporter
-// @namespace    http://tampermonkey.net/
-// @version      2025-01-27
-// @description  try to take over the world!
+// @name         Teams Markdown Exporter
+// @namespace    https://github.com/ajn142/
+// @version      0.1.3
+// @description  Export Teams chats to Markdown format
 // @author       https://github.com/danielrodriguez87, https://www.reddit.com/user/Sn34kyMofo/, https://github.com/ajn142
 // @match        https://teams.microsoft.com/v2/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=microsoft.com
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/ajn142/Teams-Markdown-Exporter/refs/heads/UserScript/teams_Markdown_Exporter
 // ==/UserScript==
 
 // Configuration
