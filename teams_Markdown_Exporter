@@ -33,7 +33,8 @@ function getChatName() {
         '.title-wrapper',
         '.chat-name',
         '[data-tid="conversationHeader"]',
-        '.ts-title-text'
+        '.ts-title-text',
+        '[data-tid="chat-title"]' // Working for individual chats, group chats, and meeting chats as of 2025-01-28
     ];
 
     for (const selector of chatSelectors) {
